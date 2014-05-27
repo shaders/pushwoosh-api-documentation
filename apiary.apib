@@ -393,4 +393,55 @@ Response codes:
            }
         }
         
-        
+## Delete Message [/deleteMessage]
+
+### Delete message [POST]
+### Deletes the message
+
+Example:
+
+>{  
+&nbsp;&nbsp;&nbsp;&nbsp;"request" : {  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"auth" : "api_access_token",  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"message" : "Message code obtained in createMessage"  
+&nbsp;&nbsp;&nbsp;&nbsp;}  
+}
+
+| field         | type      | example                                | description |
+|---------------|:----------|:--------------------------------------|-------------|
+| auth      | string    | `PUSHWOOSH_API_ACCESS_TOKEN`          | Your Pushwoosh API Access Token from the Control Panel |
+| message   | string    | `MESSAGE_CODE_FROM_CREATE_MESSAGE`    | Message code obtained in createMessage |
+
+<br />
+Responses:
+
+Example:
+>{  
+&nbsp;&nbsp;&nbsp;&nbsp;"status_code":200,  
+&nbsp;&nbsp;&nbsp;&nbsp;"status_message":"OK",  
+&nbsp;&nbsp;&nbsp;&nbsp;"response":null  
+}
+
+| HTTP Status code | status_code variable      | Description |
+|---------------|:----------|:-------------|
+| 200   | 200    | Message successfully deleted |
+| 200   | 210    | Argument error. See status_message for more info |
+| 400   | N/A    | Malformed request string |
+| 500   | 500    | Internal error :( |
+
++ Request (application/json)
+
+        {
+           "request":{
+              "auth":"api_access_token",
+              "message": "Message code obtained in createMessage"
+           }
+        }
+
++ Response 200 (application/json)
+
+        {
+           "status_code" : 200,
+           "status_message" : "OK"
+           "response" : null
+        }
