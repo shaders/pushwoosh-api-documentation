@@ -4,6 +4,252 @@ HOST: https://cp.pushwoosh.com/json/1.3/
 # Pushwoosh
 This is Pushwoosh API
 
+#Group Push notifications management
+## Create Message [/createMessage]
+
+### Create message [POST]
+### Creates new push notification
+
+Example:
+
+>{  
+&nbsp;&nbsp;&nbsp;&nbsp;"request":
+&nbsp;&nbsp;&nbsp;&nbsp;{  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"application" : "APPLICATION_CODE",  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"auth" : "api_access_token",  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"notifications":  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[{  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"send_date" : "now",  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"content" : {  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"en" : "English",  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"ru" : "Русский",  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"de" : "Deutsch"  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;},  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"data" : {  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"custom" : "json data"  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;},  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"platforms" : [1]  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]}  
+&nbsp;&nbsp;&nbsp;&nbsp;}  
+} 
+
+| field         |type      | example                                | description |
+|---------------|:----------|:--------------------------------------|-------------|
+| auth      | string    | `PW_API_ACCESS_TOKEN`          | API access token from the Pushwoosh Control Panel (create this token at https://cp.pushwoosh.com/api_access) |
+| application   | string    | `PW_APP_ID`    |  your Pushwoosh application ID where you send the message to (cannot be used together with “applications_group”) |
+| applications_group | string    | `PW_APP_GROUP_ID`    |  your Pushwoosh Application group code (cannot be used together with “application”) |
+| content   | JSON Object( language1: 'content1', language2: 'content2' ) OR string   | `"push message"` or `{"en":"English","de":"Deutsch"}    |  is the text push message delivered to the application |
+| data   | JSON string or JSON object   | `{"custom":"data"}`    |  use this if you want to pass custom data to the application (JSON format) or omit this parameter. Please note that iOS push is limited to 256 bytes. Will be passed as "u" parameter in the payload |
+| page_id   | integer   | 42    | HTML page id (created from Application’s HTML Pages). Use this if you want to deliver additional HTML content to the application or omit this parameter |
+| send_date | integer   | YYYY-MM-DD HH:mm  OR 'now'    | set the time you want the message to be sent (in UTC) or use ‘now’ to send it immediately |
+| devices | array   | ["DEVICE1_ID", "DEVICE2_ID"]    | omit this field (push notification will be delivered to all the devices for the application), or provide the list of devices IDs as described. Ignored if the applications group is used. |
+| ignore_user_timezone | boolean   | true    | send the message using users timezone or not |
+| link | string   | `http://pushwoosh.com`    | link to open in the browser after push notification has been opened |
+| minimize_link | integer   | `0`    | link shortener to use: 0 - not minimize, 1 - google, 2 - bitly, 3 - baidu (china) . Default = 1 |
+| platforms | array   | `[1]`    | Platforms to send the notification to. 1 - iOS; 2 - BB; 3 - Android; 5 - Windows Phone; 7 - OS X; 8 - Windows 8; 9 - Amazon; 10 - Safari |
+| filter | string   | "PushSegment1"    | Name of the segment (filter) to apply |
+| conditions | array   | `[TAG_CONDITION1, TAG_CONDITION2]`    | See remark |
+
+### iOS specific settings
+| field         |type      | example                                | description |
+|---------------|:----------|:--------------------------------------|-------------|
+| ios_root_params | JSON Object   | {"aps":{"key":"value"}}    | root level parameters to the aps dictionary. |
+| ios_badges | integer or string   | `5` or "+5"    | New badge value. This value will be sent to ALL devices given in "devices". Pass "+1" or "-1" for incremental badges. |
+| ios_sound | string   | "bubble.wav"    | Sound to play with the push notification. Sound file name in the main bundle of application. |
+| ios_ttl | integer   | `3600`    | Time to live parameter - the maximum lifespan of a message in seconds |
+| apns_trim_content | integer   | `1`    | (0|1) Trims the exceeding content strings with ellipsis |
+| apns_trim_content | integer   | `1`    | (0|1) Trims the exceeding content strings with ellipsis |
+
+### Android specific settings
+| field         |type      | example                                | description |
+|---------------|:----------|:--------------------------------------|-------------|
+| android_root_params | JSON Object   | {"key":"value"}    | root level parameters to the android push notification payload. |
+| android_header | string   | Hey there!"    | Override default android notification header. |
+| android_sound | string   | "bubble"    | Sound to play with the push notification. Sound file name in the "res/raw" folder, do not include the extension. |
+| android_gcm_ttl | integer   | `3600`    | Time to live parameter - the maximum lifespan of a message in seconds |
+| android_icon | string   | `icon.png`    | Android icon from the app resources |
+| android_custom_icon | string   | `http://example.com/image.png`    | Full path URL to the image file to use as push notification icon |
+| android_banner | string   | `http://example.com/banner.png`    | Full path URL to the image file to use as push notification image |
+
+### Amazon specific settings
+| field         |type      | example                                | description |
+|---------------|:----------|:--------------------------------------|-------------|
+| adm_root_params | JSON Object   | {"key":"value"}    | root level parameters to the android push notification payload. |
+| adm_header | string   | Hey there!"    | Override default android notification header. |
+| adm_sound | string   | "bubble"    | Sound to play with the push notification. Sound file name in the "res/raw" folder, do not include the extension. |
+| adm_ttl | integer   | `3600`    | Time to live parameter - the maximum lifespan of a message in seconds |
+| adm_icon | string   | `icon.png`    | Android icon from the app resources |
+| adm_custom_icon | string   | `http://example.com/image.png`    | Full path URL to the image file to use as push notification icon |
+| adm_banner | string   | `http://example.com/banner.png`    | Full path URL to the image file to use as push notification image |
+
+### Windows Phone specific settings
+| field         |type      | example                                | description |
+|---------------|:----------|:--------------------------------------|-------------|
+| wp_type | string   | "Toast"    | Windows Phone notification type. 'Tile' or 'Toast'. Raw notifications are not supported. 'Tile' if default |
+| wp_background | string   | "/Resources/Red.jpg"    | Tile image |
+| wp_backbackground | string   | "/Resources/Green.jpg"    | Back tile image |
+| wp_backtitle | string   | "back title"    | Back tile title |
+| wp_count | integer   | `5`    | Badge for Windows Phone notification |
+
+### Mac Os X specific settings
+| field         |type      | example                                | description |
+|---------------|:----------|:--------------------------------------|-------------|
+| mac_badges | integer   | 5    | Badge to set on the icon |
+| mac_sound | string   | "sound.caf"    | Sound to play with the push notification. Sound file name in the main bundle of application. |
+| mac_ttl | integer   | `3600`    | Time to live parameter - the maximum lifespan of a message in seconds |
+
+### WNS specific settings
+| field         |type      | example                                | description |
+|---------------|:----------|:--------------------------------------|-------------|
+| wns_content | JSON Object or string   | {"en": "base64==","de": "base64=="}   | Content (XML or raw) of notification encoded in MIME's base64 in form of Object( language1: 'content1', language2: 'content2' ) OR String |
+| wns_type | string   | "Toast"    | Type of push notification: 'Tile', 'Toast', 'Badge' or 'Raw'. |
+| wns_tag | string   | "myTag"    | Used in the replacement policy of the Tile. An alphanumeric string of no more than 16 characters. |
+
+### Safari specific settings
+| field         |type      | example                                | description |
+|---------------|:----------|:--------------------------------------|-------------|
+| safari_title | string   | "Title"   | Title of the notification |
+| safari_action | string   | "Click here"    | Safari action button title |
+| safari_url_args | array   | ["firstArgument", "secondArgument"]    | Values for Safari push url placeholders |
+| safari_ttl | integer   | `3600`    | Time to live parameter - the maximum lifespan of a message in seconds |
+
+### Conditions
+*condition* – Tag condition is an array like: [tagName, operator, operand], where
+
+* tagName: string  
+* operator: “LTE”|”GTE”|”EQ”|”BETWEEN”|”IN”  
+* operand: string|integer|array  
+
+Valid operators for String tags:
+
+* EQ: tag value equals to operand. Operand must be a string.
+
+Valid operators for Integer tags:
+
+* GTE: tag value greater then or equals to operand. Operand must be an integer;  
+* LTE: tag value less then or equals to operand. Operand must be an integer;  
+* EQ: tag value equals to operand. Operand must be an integer;  
+* BETWEEN: tag value greater then or equals to min_operand value and tag value less then or equals to max operand value. Operand must be an array like: [min_value, max_value].
+
+Valid operators for List tags:
+
+* IN: Intersect user values and operand. Operand must be an array of strings like: ["value 1", "value 2", "value N"].  
+
+**You cannot use “filter” and “conditions” parameters together.**
+
+**Country and Language** tags:
+
+**Language** tag value is lowercase two-letter code according to the ISO-639-1 table: http://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
+
+**Country** tag value is an uppercase two-letter code according to the ISO_3166-2 table: http://en.wikipedia.org/wiki/ISO_3166-2
+
+For example to send push notification to subscribers in Brazil that speaks Portuguese language you need to specify condition like this:
+
+*"conditions": [["Country", "EQ", "BR"],["Language", "EQ", "pt"]]*
+
+<br />
+Responses:
+
+Example:
+>{  
+&nbsp;&nbsp;&nbsp;&nbsp;"status_code":200,  
+&nbsp;&nbsp;&nbsp;&nbsp;"status_message":"OK",  
+&nbsp;&nbsp;&nbsp;&nbsp;"response": {  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"Messages":["{Notification code}", "{Notification code}", ...] // One for each notification object  
+&nbsp;&nbsp;&nbsp;&nbsp;}  
+}
+
+| HTTP Status code | status_code variable      | Description |
+|---------------|:----------|:-------------|
+| 200   | 200    | Message successfully created |
+| 200   | 210    | Argument error. See status_message for more info |
+| 400   | N/A    | Malformed request string |
+| 500   | 500    | Internal error :( |
+
++ Request (application/json)
+
+        {
+            "request" : {
+                "application" : "APPLICATION_CODE",
+                "auth" : "api_access_token",
+                "notifications" : [
+                    {
+                        "send_date" : "now",
+                        "content" : {
+                            "en" : "English",
+                            "ru" : "Русский",
+                            "de" : "Deutsch"
+                    },
+                    "data" : {
+                        "custom" : "json data"
+                    },
+                    "platforms": [1]
+                ]
+            }
+        }
+        
++ Response 200 (application/json)
+
+        {
+           "status_code" : 200,
+           "status_message" : "OK"
+           "response" : null
+        }
+
+## Delete Message [/deleteMessage]
+
+### Delete message [POST]
+### Deletes the message
+
+Example:
+
+>{  
+&nbsp;&nbsp;&nbsp;&nbsp;"request" : {  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"auth" : "api_access_token",  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"message" : "Message code obtained in createMessage"  
+&nbsp;&nbsp;&nbsp;&nbsp;}  
+}
+
+| field         | type      | example                                | description |
+|---------------|:----------|:--------------------------------------|-------------|
+| auth      | string    | `PUSHWOOSH_API_ACCESS_TOKEN`          | Your Pushwoosh API Access Token from the Control Panel |
+| message   | string    | `MESSAGE_CODE_FROM_CREATE_MESSAGE`    | Message code obtained in createMessage |
+
+<br />
+Responses:
+
+Example:
+>{  
+&nbsp;&nbsp;&nbsp;&nbsp;"status_code":200,  
+&nbsp;&nbsp;&nbsp;&nbsp;"status_message":"OK",  
+&nbsp;&nbsp;&nbsp;&nbsp;"response":null  
+}
+
+| HTTP Status code | status_code variable      | Description |
+|---------------|:----------|:-------------|
+| 200   | 200    | Message successfully deleted |
+| 200   | 210    | Argument error. See status_message for more info |
+| 400   | N/A    | Malformed request string |
+| 500   | 500    | Internal error :( |
+
++ Request (application/json)
+
+        {
+           "request":{
+              "auth":"api_access_token",
+              "message": "Message code obtained in createMessage"
+           }
+        }
+
++ Response 200 (application/json)
+
+        {
+           "status_code" : 200,
+           "status_message" : "OK"
+           "response" : null
+        }
+
+#Group Device Management
 ## Register Device [/registerDevice]
 
 ### Register device [POST]
@@ -393,246 +639,3 @@ Response codes:
            }
         }
         
-## Delete Message [/deleteMessage]
-
-### Delete message [POST]
-### Deletes the message
-
-Example:
-
->{  
-&nbsp;&nbsp;&nbsp;&nbsp;"request" : {  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"auth" : "api_access_token",  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"message" : "Message code obtained in createMessage"  
-&nbsp;&nbsp;&nbsp;&nbsp;}  
-}
-
-| field         | type      | example                                | description |
-|---------------|:----------|:--------------------------------------|-------------|
-| auth      | string    | `PUSHWOOSH_API_ACCESS_TOKEN`          | Your Pushwoosh API Access Token from the Control Panel |
-| message   | string    | `MESSAGE_CODE_FROM_CREATE_MESSAGE`    | Message code obtained in createMessage |
-
-<br />
-Responses:
-
-Example:
->{  
-&nbsp;&nbsp;&nbsp;&nbsp;"status_code":200,  
-&nbsp;&nbsp;&nbsp;&nbsp;"status_message":"OK",  
-&nbsp;&nbsp;&nbsp;&nbsp;"response":null  
-}
-
-| HTTP Status code | status_code variable      | Description |
-|---------------|:----------|:-------------|
-| 200   | 200    | Message successfully deleted |
-| 200   | 210    | Argument error. See status_message for more info |
-| 400   | N/A    | Malformed request string |
-| 500   | 500    | Internal error :( |
-
-+ Request (application/json)
-
-        {
-           "request":{
-              "auth":"api_access_token",
-              "message": "Message code obtained in createMessage"
-           }
-        }
-
-+ Response 200 (application/json)
-
-        {
-           "status_code" : 200,
-           "status_message" : "OK"
-           "response" : null
-        }
-
-## Create Message [/createMessage]
-
-### Create message [POST]
-### Creates new push notification
-
-Example:
-
->{  
-&nbsp;&nbsp;&nbsp;&nbsp;"request":
-&nbsp;&nbsp;&nbsp;&nbsp;{  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"application" : "APPLICATION_CODE",  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"auth" : "api_access_token",  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"notifications":  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[{  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"send_date" : "now",  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"content" : {  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"en" : "English",  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"ru" : "Русский",  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"de" : "Deutsch"  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;},  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"data" : {  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"custom" : "json data"  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;},  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"platforms" : [1]  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]}  
-&nbsp;&nbsp;&nbsp;&nbsp;}  
-} 
-
-| field         |type      | example                                | description |
-|---------------|:----------|:--------------------------------------|-------------|
-| auth      | string    | `PW_API_ACCESS_TOKEN`          | API access token from the Pushwoosh Control Panel (create this token at https://cp.pushwoosh.com/api_access) |
-| application   | string    | `PW_APP_ID`    |  your Pushwoosh application ID where you send the message to (cannot be used together with “applications_group”) |
-| applications_group | string    | `PW_APP_GROUP_ID`    |  your Pushwoosh Application group code (cannot be used together with “application”) |
-| content   | JSON Object( language1: 'content1', language2: 'content2' ) OR string   | `"push message"` or `{"en":"English","de":"Deutsch"}    |  is the text push message delivered to the application |
-| data   | JSON string or JSON object   | `{"custom":"data"}`    |  use this if you want to pass custom data to the application (JSON format) or omit this parameter. Please note that iOS push is limited to 256 bytes. Will be passed as "u" parameter in the payload |
-| page_id   | integer   | 42    | HTML page id (created from Application’s HTML Pages). Use this if you want to deliver additional HTML content to the application or omit this parameter |
-| send_date | integer   | YYYY-MM-DD HH:mm  OR 'now'    | set the time you want the message to be sent (in UTC) or use ‘now’ to send it immediately |
-| devices | array   | ["DEVICE1_ID", "DEVICE2_ID"]    | omit this field (push notification will be delivered to all the devices for the application), or provide the list of devices IDs as described. Ignored if the applications group is used. |
-| ignore_user_timezone | boolean   | true    | send the message using users timezone or not |
-| link | string   | `http://pushwoosh.com`    | link to open in the browser after push notification has been opened |
-| minimize_link | integer   | `0`    | link shortener to use: 0 - not minimize, 1 - google, 2 - bitly, 3 - baidu (china) . Default = 1 |
-| platforms | array   | `[1]`    | Platforms to send the notification to. 1 - iOS; 2 - BB; 3 - Android; 5 - Windows Phone; 7 - OS X; 8 - Windows 8; 9 - Amazon; 10 - Safari |
-| filter | string   | "PushSegment1"    | Name of the segment (filter) to apply |
-| conditions | array   | `[TAG_CONDITION1, TAG_CONDITION2]`    | See remark |
-
-### iOS specific settings
-| field         |type      | example                                | description |
-|---------------|:----------|:--------------------------------------|-------------|
-| ios_root_params | JSON Object   | {"aps":{"key":"value"}}    | root level parameters to the aps dictionary. |
-| ios_badges | integer or string   | `5` or "+5"    | New badge value. This value will be sent to ALL devices given in "devices". Pass "+1" or "-1" for incremental badges. |
-| ios_sound | string   | "bubble.wav"    | Sound to play with the push notification. Sound file name in the main bundle of application. |
-| ios_ttl | integer   | `3600`    | Time to live parameter - the maximum lifespan of a message in seconds |
-| apns_trim_content | integer   | `1`    | (0|1) Trims the exceeding content strings with ellipsis |
-| apns_trim_content | integer   | `1`    | (0|1) Trims the exceeding content strings with ellipsis |
-
-### Android specific settings
-| field         |type      | example                                | description |
-|---------------|:----------|:--------------------------------------|-------------|
-| android_root_params | JSON Object   | {"key":"value"}    | root level parameters to the android push notification payload. |
-| android_header | string   | Hey there!"    | Override default android notification header. |
-| android_sound | string   | "bubble"    | Sound to play with the push notification. Sound file name in the "res/raw" folder, do not include the extension. |
-| android_gcm_ttl | integer   | `3600`    | Time to live parameter - the maximum lifespan of a message in seconds |
-| android_icon | string   | `icon.png`    | Android icon from the app resources |
-| android_custom_icon | string   | `http://example.com/image.png`    | Full path URL to the image file to use as push notification icon |
-| android_banner | string   | `http://example.com/banner.png`    | Full path URL to the image file to use as push notification image |
-
-### Amazon specific settings
-| field         |type      | example                                | description |
-|---------------|:----------|:--------------------------------------|-------------|
-| adm_root_params | JSON Object   | {"key":"value"}    | root level parameters to the android push notification payload. |
-| adm_header | string   | Hey there!"    | Override default android notification header. |
-| adm_sound | string   | "bubble"    | Sound to play with the push notification. Sound file name in the "res/raw" folder, do not include the extension. |
-| adm_ttl | integer   | `3600`    | Time to live parameter - the maximum lifespan of a message in seconds |
-| adm_icon | string   | `icon.png`    | Android icon from the app resources |
-| adm_custom_icon | string   | `http://example.com/image.png`    | Full path URL to the image file to use as push notification icon |
-| adm_banner | string   | `http://example.com/banner.png`    | Full path URL to the image file to use as push notification image |
-
-### Windows Phone specific settings
-| field         |type      | example                                | description |
-|---------------|:----------|:--------------------------------------|-------------|
-| wp_type | string   | "Toast"    | Windows Phone notification type. 'Tile' or 'Toast'. Raw notifications are not supported. 'Tile' if default |
-| wp_background | string   | "/Resources/Red.jpg"    | Tile image |
-| wp_backbackground | string   | "/Resources/Green.jpg"    | Back tile image |
-| wp_backtitle | string   | "back title"    | Back tile title |
-| wp_count | integer   | `5`    | Badge for Windows Phone notification |
-
-### Mac Os X specific settings
-| field         |type      | example                                | description |
-|---------------|:----------|:--------------------------------------|-------------|
-| mac_badges | integer   | 5    | Badge to set on the icon |
-| mac_sound | string   | "sound.caf"    | Sound to play with the push notification. Sound file name in the main bundle of application. |
-| mac_ttl | integer   | `3600`    | Time to live parameter - the maximum lifespan of a message in seconds |
-
-### WNS specific settings
-| field         |type      | example                                | description |
-|---------------|:----------|:--------------------------------------|-------------|
-| wns_content | JSON Object or string   | {"en": "base64==","de": "base64=="}   | Content (XML or raw) of notification encoded in MIME's base64 in form of Object( language1: 'content1', language2: 'content2' ) OR String |
-| wns_type | string   | "Toast"    | Type of push notification: 'Tile', 'Toast', 'Badge' or 'Raw'. |
-| wns_tag | string   | "myTag"    | Used in the replacement policy of the Tile. An alphanumeric string of no more than 16 characters. |
-
-### Safari specific settings
-| field         |type      | example                                | description |
-|---------------|:----------|:--------------------------------------|-------------|
-| safari_title | string   | "Title"   | Title of the notification |
-| safari_action | string   | "Click here"    | Safari action button title |
-| safari_url_args | array   | ["firstArgument", "secondArgument"]    | Values for Safari push url placeholders |
-| safari_ttl | integer   | `3600`    | Time to live parameter - the maximum lifespan of a message in seconds |
-
-### Conditions
-*condition* – Tag condition is an array like: [tagName, operator, operand], where
-
-* tagName: string  
-* operator: “LTE”|”GTE”|”EQ”|”BETWEEN”|”IN”  
-* operand: string|integer|array  
-
-Valid operators for String tags:
-
-* EQ: tag value equals to operand. Operand must be a string.
-
-Valid operators for Integer tags:
-
-* GTE: tag value greater then or equals to operand. Operand must be an integer;  
-* LTE: tag value less then or equals to operand. Operand must be an integer;  
-* EQ: tag value equals to operand. Operand must be an integer;  
-* BETWEEN: tag value greater then or equals to min_operand value and tag value less then or equals to max operand value. Operand must be an array like: [min_value, max_value].
-
-Valid operators for List tags:
-
-* IN: Intersect user values and operand. Operand must be an array of strings like: ["value 1", "value 2", "value N"].  
-
-**You cannot use “filter” and “conditions” parameters together.**
-
-**Country and Language** tags:
-
-**Language** tag value is lowercase two-letter code according to the ISO-639-1 table: http://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
-
-**Country** tag value is an uppercase two-letter code according to the ISO_3166-2 table: http://en.wikipedia.org/wiki/ISO_3166-2
-
-For example to send push notification to subscribers in Brazil that speaks Portuguese language you need to specify condition like this:
-
-*"conditions": [["Country", "EQ", "BR"],["Language", "EQ", "pt"]]*
-
-<br />
-Responses:
-
-Example:
->{  
-&nbsp;&nbsp;&nbsp;&nbsp;"status_code":200,  
-&nbsp;&nbsp;&nbsp;&nbsp;"status_message":"OK",  
-&nbsp;&nbsp;&nbsp;&nbsp;"response": {  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"Messages":["{Notification code}", "{Notification code}", ...] // One for each notification object  
-&nbsp;&nbsp;&nbsp;&nbsp;}  
-}
-
-| HTTP Status code | status_code variable      | Description |
-|---------------|:----------|:-------------|
-| 200   | 200    | Message successfully created |
-| 200   | 210    | Argument error. See status_message for more info |
-| 400   | N/A    | Malformed request string |
-| 500   | 500    | Internal error :( |
-
-+ Request (application/json)
-
-        {
-            "request" : {
-                "application" : "APPLICATION_CODE",
-                "auth" : "api_access_token",
-                "notifications" : [
-                    {
-                        "send_date" : "now",
-                        "content" : {
-                            "en" : "English",
-                            "ru" : "Русский",
-                            "de" : "Deutsch"
-                    },
-                    "data" : {
-                        "custom" : "json data"
-                    },
-                    "platforms": [1]
-                ]
-            }
-        }
-        
-+ Response 200 (application/json)
-
-        {
-           "status_code" : 200,
-           "status_message" : "OK"
-           "response" : null
-        }
