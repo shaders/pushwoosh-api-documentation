@@ -111,11 +111,71 @@ Example:
         {
             "request" : {
               "application" : "PW_APPLICATION_CODE",
-              "push_token" : "DEVICE_PUSH_TOKEN",
-              "language" : "en",
-              "hwid" : "HARDWARE_DEVICE_ID",
-              "timezone" : 3600,
-              "device_type" : 1
+              "hwid" : "HARDWARE_DEVICE_ID"
+           }
+        }
+
++ Response 200 (application/json)
+
+        {
+           "status_code":200,
+           "status_message":"OK"
+           "response": null
+        }
+
+## Set Tags [/setTags]
+
+### Set tags [POST]
+### Set tags values for device
+
+Example:
+
+>{
+&nbsp;&nbsp;&nbsp;&nbsp;"request":{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"application":"DEAD0-BEEF0",
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"hwid": "device hardware id",
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"tags": {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"tag1": "string value",
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"tag2": 42,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"tag3": "string"
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} 
+&nbsp;&nbsp;&nbsp;&nbsp;}
+}
+
+| field         | type      | example                                | description |
+|---------------|:----------|:--------------------------------------|-------------|
+| application   | string    | `PUSHWOOSH_APP_ID`        | Your Pushwoosh application ID |
+| hwid          | string    | `ANOTHER_VERY_LONG_ID`    | Hardware device id used in `registerDevice` function call |
+| tags          | JSON Object    | `{"tagName1" : "tagValue"}`    | Tag names and values in JSON Object format |
+
+<br />
+Responses:
+
+Example:
+>{  
+&nbsp;&nbsp;&nbsp;&nbsp;"status_code":200,  
+&nbsp;&nbsp;&nbsp;&nbsp;"status_message":"OK",  
+&nbsp;&nbsp;&nbsp;&nbsp;"response":null  
+}
+
+| HTTP Status code | status_code variable      | Description |
+|---------------|:----------|:-------------|
+| 200   | 200    | Tags set succcessfully |
+| 200   | 210    | Argument error. See status_message for more info |
+| 400   | N/A    | Malformed request string |
+| 500   | 500    | Internal error :( |
+
++ Request (application/json)
+
+        {
+           "request":{
+              "application":"DEAD0-BEEF0",
+              "hwid": "device hardware id",
+              "tags": {
+                   "tag1": "string value",
+                   "tag2": 42,
+                   "tag3": "string"
+              } 
            }
         }
 
