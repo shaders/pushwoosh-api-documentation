@@ -153,9 +153,9 @@ Responses:
 
 Example:
 >{  
-&nbsp;&nbsp;&nbsp;&nbsp;"status_code":200,  
-&nbsp;&nbsp;&nbsp;&nbsp;"status_message":"OK",  
-&nbsp;&nbsp;&nbsp;&nbsp;"response":null  
+&nbsp;&nbsp;&nbsp;&nbsp;"status_code" : 200,  
+&nbsp;&nbsp;&nbsp;&nbsp;"status_message" : "OK",  
+&nbsp;&nbsp;&nbsp;&nbsp;"response" : null  
 }
 
 | HTTP Status code | status_code variable      | Description |
@@ -197,10 +197,10 @@ This function is used internally by iOS SDK. Every time you set (or clear) the b
 Example:
 
 >{  
-&nbsp;&nbsp;&nbsp;&nbsp;"request":{  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"application":"DEAD0-BEEF0",  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"hwid": "device hardware id",  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"badge": 5  
+&nbsp;&nbsp;&nbsp;&nbsp;"request" : {  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"application" : "DEAD0-BEEF0",  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"hwid" : "device hardware id",  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"badge" : 5  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}  
 &nbsp;&nbsp;&nbsp;&nbsp;}  
 }
@@ -216,9 +216,9 @@ Responses:
 
 Example:
 >{  
-&nbsp;&nbsp;&nbsp;&nbsp;"status_code":200,  
-&nbsp;&nbsp;&nbsp;&nbsp;"status_message":"OK",  
-&nbsp;&nbsp;&nbsp;&nbsp;"response":null  
+&nbsp;&nbsp;&nbsp;&nbsp;"status_code" : 200,  
+&nbsp;&nbsp;&nbsp;&nbsp;"status_message" : "OK",  
+&nbsp;&nbsp;&nbsp;&nbsp;"response" : null  
 }
 
 | HTTP Status code | status_code variable      | Description |
@@ -234,10 +234,7 @@ Example:
            "request":{
               "application":"DEAD0-BEEF0",
               "hwid": "device hardware id",
-              "tags": {
-                   "tag1": "string value",
-                   "tag2": 42,
-                   "tag3": "string"
+              "badge": 5
               } 
            }
         }
@@ -250,3 +247,150 @@ Example:
            "response": null
         }
 
+## Push Stat [/pushStat]
+
+### Push stat [POST]
+### Register push open event.
+
+This function is used internally by Pushwoosh SDK.
+
+Example:
+
+>{  
+&nbsp;&nbsp;&nbsp;&nbsp;"request" : {  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"application" : "DEAD0-BEEF0",  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"hwid" : "device hardware id",  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"hash" : "HASH_VALUE_FROM_PUSH"  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}  
+&nbsp;&nbsp;&nbsp;&nbsp;}  
+}
+
+| field         | type      | example                                | description |
+|---------------|:----------|:--------------------------------------|-------------|
+| application   | string    | `PUSHWOOSH_APP_ID`        | Your Pushwoosh application ID |
+| hwid          | string    | `ANOTHER_VERY_LONG_ID`    | Hardware device id used in `registerDevice` function call |
+| hash         | string   | `HASH_VALUE_FROM_PUSH`    | Hash tag received in push notification |
+
+<br />
+Responses:
+
+Example:
+>{  
+&nbsp;&nbsp;&nbsp;&nbsp;"status_code":200,  
+&nbsp;&nbsp;&nbsp;&nbsp;"status_message":"OK",  
+&nbsp;&nbsp;&nbsp;&nbsp;"response":null  
+}
+
+| HTTP Status code | status_code variable      | Description |
+|---------------|:----------|:-------------|
+| 200   | 200    | Hash sent succcessfully |
+| 200   | 210    | Argument error. See status_message for more info |
+| 400   | N/A    | Malformed request string |
+| 500   | 500    | Internal error :( |
+
++ Request (application/json)
+
+        {
+           "request":{
+              "application" : "DEAD0-BEEF0",
+              "hwid" : "device hardware id",
+              "hash" : "p5"
+              } 
+           }
+        }
+
++ Response 200 (application/json)
+
+        {
+           "status_code" : 200,
+           "status_message" : "OK"
+           "response" : null
+        }
+
+## Get Nearest Zone [/getNearestZone]
+
+### Get nearest zone [POST]
+### Records device location for geo push notifications.
+
+This function is used internally by Pushwoosh SDK.
+
+Example:
+
+>{  
+&nbsp;&nbsp;&nbsp;&nbsp;"request" : {  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"application" : "DEAD0-BEEF0",  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"hwid" : "device hardware id",  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"lat" : 12.12345  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"lng" : 23.12345  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}  
+&nbsp;&nbsp;&nbsp;&nbsp;}  
+}
+
+| field         | type      | example                                | description |
+|---------------|:----------|:--------------------------------------|-------------|
+| application   | string    | `PUSHWOOSH_APP_ID`        | Your Pushwoosh application ID |
+| hwid          | string    | `ANOTHER_VERY_LONG_ID`    | Hardware device id used in `registerDevice` function call |
+| lat         | float   | `12.12345`    | Latitude of the device |
+| lng         | float   | `23.12345`    | Longitude of the device |
+
+<br />
+Responses:
+
+Example:
+>{  
+&nbsp;&nbsp;&nbsp;&nbsp;"status_code" : 200,  
+&nbsp;&nbsp;&nbsp;&nbsp;"status_message" : "OK"  
+&nbsp;&nbsp;&nbsp;&nbsp;"response" : {  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"name" : "zone name",  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"lat" : 42,  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"lng" : 42,  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"range" : 100,  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"distance" : 4715784  
+&nbsp;&nbsp;&nbsp;&nbsp;}  
+}
+
+Returns nearest zone to the position provided in the request:
+
+| Field | Type      | Description |
+|---------------|:----------|:-------------|
+| name   | string    | Geo-zone name |
+| lat   | float    | Latitude of the zone |
+| lng   | float    | Longitude of the zone |
+| range   | float    | Range in meters |
+| distance   | float    | Distance in meters |
+
+Response codes:
+
+| HTTP Status code | status_code variable      | Description |
+|---------------|:----------|:-------------|
+| 200   | 200    | Hash sent succcessfully |
+| 200   | 210    | Argument error. See status_message for more info |
+| 400   | N/A    | Malformed request string |
+| 500   | 500    | Internal error :( |
+
++ Request (application/json)
+
+        {
+           "request":{
+              "application": "DEAD0-BEEF0",
+              "hwid": "HWID",
+              "lat": 10.12345,
+              "lng": 28.12345
+           }
+        }
+
++ Response 200 (application/json)
+
+        {
+           "status_code":200,
+           "status_message":"OK"
+           "response": {
+              "name":"zone name",
+              "lat":42,
+              "lng":42,
+              "range":100,
+              "distance":4715784
+           }
+        }
+        
+        
