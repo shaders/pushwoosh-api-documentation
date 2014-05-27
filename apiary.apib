@@ -445,3 +445,85 @@ Example:
            "status_message" : "OK"
            "response" : null
         }
+
+## Create Message [/createMessage]
+
+### Create message [POST]
+### Creates new push notification
+
+Example:
+
+>{  
+&nbsp;&nbsp;&nbsp;&nbsp;"request":
+&nbsp;&nbsp;&nbsp;&nbsp;{  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"application" : "APPLICATION_CODE",  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"auth" : "api_access_token",  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"notifications":  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[{  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"send_date" : "now",  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"content" : {  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"en" : "English",  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"ru" : "Русский",  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"de" : "Deutsch"  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;},  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"data" : {  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"custom" : "json data"  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;},  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"platforms" : [1]  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]}  
+&nbsp;&nbsp;&nbsp;&nbsp;}  
+} 
+
+| field         | type      | example                                | description |
+|---------------|:----------|:--------------------------------------|-------------|
+| auth      | string    | `PUSHWOOSH_API_ACCESS_TOKEN`          | Your Pushwoosh API Access Token from the Control Panel |
+| message   | string    | `MESSAGE_CODE_FROM_CREATE_MESSAGE`    | Message code obtained in createMessage |
+
+<br />
+Responses:
+
+Example:
+>{  
+&nbsp;&nbsp;&nbsp;&nbsp;"status_code":200,  
+&nbsp;&nbsp;&nbsp;&nbsp;"status_message":"OK",  
+&nbsp;&nbsp;&nbsp;&nbsp;"response": {  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"Messages":["{Notification code}", "{Notification code}", ...] // One for each notification object
+&nbsp;&nbsp;&nbsp;&nbsp;} 
+}
+
+| HTTP Status code | status_code variable      | Description |
+|---------------|:----------|:-------------|
+| 200   | 200    | Message successfully created |
+| 200   | 210    | Argument error. See status_message for more info |
+| 400   | N/A    | Malformed request string |
+| 500   | 500    | Internal error :( |
+
++ Request (application/json)
+
+        {
+            "request" : {
+                "application" : "APPLICATION_CODE",
+                "auth" : "api_access_token",
+                "notifications" : [
+                    {
+                        "send_date" : "now",
+                        "content" : {
+                            "en" : "English",
+                            "ru" : "Русский",
+                            "de" : "Deutsch"
+                    },
+                    "data" : {
+                        "custom" : "json data"
+                    },
+                    "platforms": [1]
+                ]
+            }
+        }
+        
++ Response 200 (application/json)
+
+        {
+           "status_code" : 200,
+           "status_message" : "OK"
+           "response" : null
+        }
