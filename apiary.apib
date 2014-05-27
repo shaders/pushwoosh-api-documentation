@@ -576,17 +576,17 @@ Valid operators for List tags:
 
 * IN: Intersect user values and operand. Operand must be an array of strings like: ["value 1", "value 2", "value N"].  
 
-You cannot use “filter” and “conditions” parameters together.
+**You cannot use “filter” and “conditions” parameters together.**
 
-Country and Language tags:
+**Country and Language** tags:
 
-Language tag value is lowercase two-letter code according to the ISO-639-1 table: http://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
+**Language** tag value is lowercase two-letter code according to the ISO-639-1 table: http://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
 
-Country tag value is an uppercase two-letter code according to the ISO_3166-2 table: http://en.wikipedia.org/wiki/ISO_3166-2
+**Country** tag value is an uppercase two-letter code according to the ISO_3166-2 table: http://en.wikipedia.org/wiki/ISO_3166-2
 
 For example to send push notification to subscribers in Brazil that speaks Portuguese language you need to specify condition like this:
 
-"conditions": [["Country", "EQ", "BR"],["Language", "EQ", "pt"]]
+*"conditions": [["Country", "EQ", "BR"],["Language", "EQ", "pt"]]*
 
 <br />
 Responses:
@@ -596,8 +596,8 @@ Example:
 &nbsp;&nbsp;&nbsp;&nbsp;"status_code":200,  
 &nbsp;&nbsp;&nbsp;&nbsp;"status_message":"OK",  
 &nbsp;&nbsp;&nbsp;&nbsp;"response": {  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"Messages":["{Notification code}", "{Notification code}", ...] // One for each notification object
-&nbsp;&nbsp;&nbsp;&nbsp;} 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"Messages":["{Notification code}", "{Notification code}", ...] // One for each notification object  
+&nbsp;&nbsp;&nbsp;&nbsp;}  
 }
 
 | HTTP Status code | status_code variable      | Description |
