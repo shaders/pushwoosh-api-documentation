@@ -1,0 +1,129 @@
+FORMAT: 1A
+HOST: https://cp.pushwoosh.com/json/1.3/
+
+# Pushwoosh
+This is Pushwoosh API
+
+## Register Device [/registerDevice]
+
+### Register device [POST]
+### Registers device for the application
+
+Example:
+
+>{  
+&nbsp;&nbsp;&nbsp;&nbsp;"request" : {  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"application" : "PW_APPLICATION_CODE",  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"push_token" : "DEVICE_PUSH_TOKEN",  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"language" : "en",  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"hwid" : "HARDWARE_DEVICE_ID",  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"timezone" : 3600,  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"device_type" : 1  
+&nbsp;&nbsp;&nbsp;&nbsp;}  
+}
+
+| field         | type      | example                                | description |
+|---------------|:----------|:--------------------------------------|-------------|
+| application   | string    | `PUSHWOOSH_APP_ID`        | Your Pushwoosh application ID |
+| push_token    | string    | `USUALLY_VERY_LONG_ID`    | Push token for the device |
+| language      | string    | `en`                      | Language locale of the device |
+| hwid          | string    | `ANOTHER_VERY_LONG_ID`    | Unique string to identify the device <sup>*</sup> |
+| timezone      | integer   | `3600`                    | Timezone offset in seconds for the device (optional) |
+| device_type   | integer   | `1`                       | 1 – iphone, 2 – blackberry, 3 – android, 4 – nokia, 5 – WP7, 7 – mac |
+
+<sup>*</sup><small>Please note that accessing UDID on iOS is deprecated and not allowed, one of the alternative ways now is to use IdentifierForVendor</small>
+
+<br />
+Responses:
+
+Example:
+>{  
+&nbsp;&nbsp;&nbsp;&nbsp;"status_code":200,  
+&nbsp;&nbsp;&nbsp;&nbsp;"status_message":"OK",  
+&nbsp;&nbsp;&nbsp;&nbsp;"response": null  
+}
+
+| HTTP Status code | status_code variable      | Description |
+|---------------|:----------|:-------------|
+| 200   | 200    | Device successfully registered |
+| 200   | 210    | Argument error. See status_message for more info |
+| 400   | N/A    | Malformed request string |
+| 500   | 500    | Internal error :( |
+
++ Request (application/json)
+
+        {
+            "request" : {
+              "application" : "PW_APPLICATION_CODE",
+              "push_token" : "DEVICE_PUSH_TOKEN",
+              "language" : "en",
+              "hwid" : "HARDWARE_DEVICE_ID",
+              "timezone" : 3600,
+              "device_type" : 1
+           }
+        }
+
++ Response 200 (application/json)
+
+        {
+           "status_code":200,
+           "status_message":"OK"
+           "response": null
+        }
+
+## Unregister Device [/unregisterDevice]
+
+### Unregister device [POST]
+### Remove device from the application
+
+Example:
+
+>{  
+&nbsp;&nbsp;&nbsp;&nbsp;"request" : {  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"application" : "PW_APPLICATION_CODE",  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"hwid" : "HARDWARE_DEVICE_ID",  
+&nbsp;&nbsp;&nbsp;&nbsp;}  
+}
+
+| field         | type      | example                                | description |
+|---------------|:----------|:--------------------------------------|-------------|
+| application   | string    | `PUSHWOOSH_APP_ID`        | Your Pushwoosh application ID |
+| hwid          | string    | `ANOTHER_VERY_LONG_ID`    | Hardware device id used in `registerDevice` function call |
+
+<br />
+Responses:
+
+Example:
+>{  
+&nbsp;&nbsp;&nbsp;&nbsp;"status_code":200,  
+&nbsp;&nbsp;&nbsp;&nbsp;"status_message":"OK"  
+}
+
+| HTTP Status code | status_code variable      | Description |
+|---------------|:----------|:-------------|
+| 200   | 200    | Device successfully unsubscribed |
+| 200   | 210    | Argument error. See status_message for more info |
+| 400   | N/A    | Malformed request string |
+| 500   | 500    | Internal error :( |
+
++ Request (application/json)
+
+        {
+            "request" : {
+              "application" : "PW_APPLICATION_CODE",
+              "push_token" : "DEVICE_PUSH_TOKEN",
+              "language" : "en",
+              "hwid" : "HARDWARE_DEVICE_ID",
+              "timezone" : 3600,
+              "device_type" : 1
+           }
+        }
+
++ Response 200 (application/json)
+
+        {
+           "status_code":200,
+           "status_message":"OK"
+           "response": null
+        }
+
