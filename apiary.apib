@@ -474,10 +474,64 @@ Example:
 &nbsp;&nbsp;&nbsp;&nbsp;}  
 } 
 
-| field         | type      | example                                | description |
+| field         |type      | example                                | description |
 |---------------|:----------|:--------------------------------------|-------------|
-| auth      | string    | `PUSHWOOSH_API_ACCESS_TOKEN`          | Your Pushwoosh API Access Token from the Control Panel |
-| message   | string    | `MESSAGE_CODE_FROM_CREATE_MESSAGE`    | Message code obtained in createMessage |
+| auth      | string    | `PW_API_ACCESS_TOKEN`          | API access token from the Pushwoosh Control Panel (create this token at https://cp.pushwoosh.com/api_access) |
+| application   | string    | `PW_APP_ID`    |  your Pushwoosh application ID where you send the message to (cannot be used together with “applications_group”) |
+| applications_group | string    | `PW_APP_GROUP_ID`    |  your Pushwoosh Application group code (cannot be used together with “application”) |
+| content   | JSON Object( language1: 'content1', language2: 'content2' ) OR string   | `"push message"` or `{"en":"English","de":"Deutsch"}    |  is the text push message delivered to the application |
+| data   | JSON string or JSON object   | `{"custom":"data"}`    |  use this if you want to pass custom data to the application (JSON format) or omit this parameter. Please note that iOS push is limited to 256 bytes. Will be passed as "u" parameter in the payload |
+| page_id   | integer   | 42    | HTML page id (created from Application’s HTML Pages). Use this if you want to deliver additional HTML content to the application or omit this parameter |
+| send_date | integer   | YYYY-MM-DD HH:mm  OR 'now'    | set the time you want the message to be sent (in UTC) or use ‘now’ to send it immediately |
+| devices | array   | ["DEVICE1_ID", "DEVICE2_ID"]    | omit this field (push notification will be delivered to all the devices for the application), or provide the list of devices IDs as described |
+| ignore_user_timezone | boolean   | true    | send the message using users timezone or not |
+| link | string   | `http://pushwoosh.com`    | link to open in the browser after push notification has been opened |
+| minimize_link | integer   | `0`    | link shortener to use: 0 - not minimize, 1 - google, 2 - bitly, 3 - baidu (china) . Default = 1 |
+| platforms | array   | `[1]`    | Platforms to send the notification to. 1 - iOS; 2 - BB; 3 - Android; 5 - Windows Phone; 7 - OS X; 8 - Windows 8; 9 - Amazon; 10 - Safari |
+
+### iOS specific settings
+| field         |type      | example                                | description |
+|---------------|:----------|:--------------------------------------|-------------|
+| ios_root_params | array   | {"aps":{"key":"value"}}    | root level parameters to the aps dictionary. |
+| ios_badges | integer or string   | `5` or "+5"    | New badge value. This value will be sent to ALL devices given in "devices". Pass "+1" or "-1" for incremental badges. |
+| ios_sound | string   | "bubble.wav"    | Sound to play with the push notification. Sound file name in the main bundle of application. |
+| ios_ttl | integer   | `3600`    | Time to live parameter - the maximum lifespan of a message in seconds |
+| apns_trim_content | integer   | `1`    | (0|1) Trims the exceeding content strings with ellipsis |
+| apns_trim_content | integer   | `1`    | (0|1) Trims the exceeding content strings with ellipsis |
+
+### Android specific settings
+| field         |type      | example                                | description |
+|---------------|:----------|:--------------------------------------|-------------|
+| android_root_params | array   | {"key":"value"}    | root level parameters to the android push notification payload. |
+| android_header | string   | Hey there!"    | Override default android notification header. |
+| android_sound | string   | "bubble"    | Sound to play with the push notification. Sound file name in the "res/raw" folder, do not include the extension. |
+| android_gcm_ttl | integer   | `3600`    | Time to live parameter - the maximum lifespan of a message in seconds |
+| android_icon | string   | `icon.png`    | Android icon from the app resources |
+| android_custom_icon | string   | `http://example.com/image.png`    | Full path URL to the image file to use as push notification icon |
+| android_banner | string   | `http://example.com/banner.png`    | Full path URL to the image file to use as push notification image |
+
+### Amazon specific settings
+| field         |type      | example                                | description |
+|---------------|:----------|:--------------------------------------|-------------|
+| adm_root_params | array   | {"key":"value"}    | root level parameters to the android push notification payload. |
+| adm_header | string   | Hey there!"    | Override default android notification header. |
+| adm_sound | string   | "bubble"    | Sound to play with the push notification. Sound file name in the "res/raw" folder, do not include the extension. |
+| adm_ttl | integer   | `3600`    | Time to live parameter - the maximum lifespan of a message in seconds |
+| adm_icon | string   | `icon.png`    | Android icon from the app resources |
+| adm_custom_icon | string   | `http://example.com/image.png`    | Full path URL to the image file to use as push notification icon |
+| adm_banner | string   | `http://example.com/banner.png`    | Full path URL to the image file to use as push notification image |
+
+### Amazon specific settings
+| field         |type      | example                                | description |
+|---------------|:----------|:--------------------------------------|-------------|
+| adm_root_params | array   | {"key":"value"}    | root level parameters to the android push notification payload. |
+| adm_header | string   | Hey there!"    | Override default android notification header. |
+| adm_sound | string   | "bubble"    | Sound to play with the push notification. Sound file name in the "res/raw" folder, do not include the extension. |
+| adm_ttl | integer   | `3600`    | Time to live parameter - the maximum lifespan of a message in seconds |
+| adm_icon | string   | `icon.png`    | Android icon from the app resources |
+| adm_custom_icon | string   | `http://example.com/image.png`    | Full path URL to the image file to use as push notification icon |
+| adm_banner | string   | `http://example.com/banner.png`    | Full path URL to the image file to use as push notification image |
+
 
 <br />
 Responses:
